@@ -1,0 +1,25 @@
+pre:has(code) {
+  overflow-x: auto;
+  max-width: 100%;
+  background-color: black;
+  padding: 3rem 3.5rem 2.5rem 3rem;
+  color: rgb(16 185 129 / 1);
+  font-size: 0.875rem
+    /* 14px */
+  ;
+  line-height: 1.25rem
+    /* 20px */
+  ;
+}
+
+p code {
+  overflow-x: auto;
+  max-width: 100%;
+  background-color: rgba(131, 131, 131, 0.164);
+  color: rgb(4 120 87/1);
+  font-size: 0.875rem;
+  /* 14px */
+  line-height: 1rem;
+  /* 20px */
+  padding: 0.125rem 0.25rem 0.125rem 0.25rem;
+}
