@@ -54,6 +54,7 @@ export type Domain = {
 export type Quiz = {
   id: string;
   name: string;
+  slug: string;
 };
 
 export type QuizInstance = {

@@ -44,7 +44,7 @@ const rootLayout = ({
       >
         <Navbar />
         {/* useRootLayoutClasses */}
-        <div className="p-8 md:p-24 lg:p-32 self-center w-full max-w-7xl">
+        <div className="p-8 md:p-24 lg:p-32 self-center w-full max-w-7xl h-full">
           {children}
         </div>
         <Footer />

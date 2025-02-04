@@ -50,7 +50,6 @@ const QuizForm = ({
   const {
     answersRecord, setFinalTime,
   } = useUserQuizData();
-  const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const isAnsweredCorrectly = isSubmitted && isCorrect;
@@ -101,7 +100,6 @@ const QuizForm = ({
   });
   const handleChangeAnswer = (val: string) => {
     form.setValue('answerId', val);
-    setSubmittedAnswer(null);
     setIsCorrect(null);
     setIsSubmitted(null);
   };
@@ -117,7 +115,6 @@ const QuizForm = ({
     }
     router.push(getNextUrl(qNum + 1));
     form.reset({ answerId: undefined });
-    setSubmittedAnswer(null);
     router.refresh();
     setIsCorrect(null);
     setIsSubmitted(null);
@@ -175,10 +172,8 @@ const QuizForm = ({
   useEffect(() => {
     if (answersRecord[qNum]?.find((a) => a === question.correctAnswer)) {
       form.reset({ answerId: question.correctAnswer });
-      setSubmittedAnswer(question.correctAnswer || null);
     } else {
       form.reset({ answerId: undefined });
-      setSubmittedAnswer(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qNum]);
@@ -230,7 +225,6 @@ const QuizForm = ({
             isAnsweredIncorrectly={isAnsweredIncorrectly}
             form={form}
             formAnswer={answerId}
-            submittedAnswer={submittedAnswer}
             handleChangeAnswer={handleChangeAnswer}
           />
           <div className="grid gap-2">

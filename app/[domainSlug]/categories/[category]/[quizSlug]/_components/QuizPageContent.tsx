@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { CATEGORIES_ROUTE, DOMAIN_ROUTE, QUIZ_INSTANCE_ROUTE } from '@/lib/data/routes';
 import { Button } from '@/components/ui/common/shadcn/button';
+import { Play } from 'lucide-react';
 
 const QuizPageContent = () => {
   const {
@@ -34,12 +35,13 @@ const QuizPageContent = () => {
   return (
     <main className="flex flex-col items-center justify-between">
       <Button
-        variant="blank"
-        className={cn('flex gap-1 p-6 shadow-sm text-red-400', {
+        variant="destructive"
+        className={cn('bg-transparent flex gap-1 px-8 py-6 border-2 border-red-500 shadow-sm text-red-400', {
           'opacity-50 pointer-events-none': clicked,
         })}
         onClick={onBeginQuiz}
       >
+        <Play className="w-4 h-4" />
         Begin quiz
       </Button>
     </main>

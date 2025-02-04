@@ -7,7 +7,7 @@ import { DarkModeToggle } from './DarkModeToggle';
 import Logo from './Logo';
 
 interface NavbarProps {
-  params: { domainSlug: string; };
+  params?: { domainSlug: string; };
 }
 
 const Navbar = async ({
