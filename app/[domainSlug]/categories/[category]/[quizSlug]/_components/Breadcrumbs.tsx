@@ -32,7 +32,7 @@ const Breadcrumbs = () => {
     return () => window.removeEventListener('resize', handleUpdateWidth);
   }, [pathname]);
   return (
-    <Breadcrumb className="mb-4 m-auto" style={{ width }}>
+    <Breadcrumb className="mb-4" style={{ width }}>
       <BreadcrumbList>
         {pathnameStrings.map((str, i) => {
           // if the string is a UUID, assign a readable string

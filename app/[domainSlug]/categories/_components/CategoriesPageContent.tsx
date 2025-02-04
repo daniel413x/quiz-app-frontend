@@ -2,6 +2,7 @@ import Header from '@/components/ui/common/Header';
 import { DOMAIN_ROUTE, QUIZ_CATEGORY_API_ROUTE } from '@/lib/data/routes';
 import { CategoryGETManyRes } from '@/lib/data/types';
 import CategoriesQuizLinks from './CategoriesQuizLinks';
+import Breadcrumbs from '../[category]/[quizSlug]/_components/Breadcrumbs';
 
 interface CategoriesPageContentProps {
   params: { domainSlug: string; };
@@ -18,6 +19,7 @@ const CategoriesPageContent = async ({
   const categories: CategoryGETManyRes = await res.json();
   return (
     <div className="flex flex-col">
+      <Breadcrumbs />
       <Header header="Quizzes by category" />
       <ul className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {categories[0].map((c) => (

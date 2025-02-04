@@ -3,7 +3,7 @@ import { DOMAIN_ROUTE, QUIZ_API_ROUTE } from '@/lib/data/routes';
 import { Quiz } from '@/lib/data/types';
 import Breadcrumbs from './_components/Breadcrumbs';
 
-interface SectionLayoutProps {
+interface QuizPageLayoutProps {
   children: ReactNode;
 }
 
@@ -26,13 +26,13 @@ export const generateMetadata = async ({
   };
 };
 
-const sectionLayout = ({
+const QuizPageLayout = ({
   children,
-}: SectionLayoutProps) => (
+}: QuizPageLayoutProps) => (
   <>
     <Breadcrumbs />
     {children}
   </>
 );
 
-export default sectionLayout;
+export default QuizPageLayout;

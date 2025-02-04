@@ -27,16 +27,16 @@ const CategoriesQuizLinks = async ({
     ))}
     <li>
       <NextLink
-        href={`/${CATEGORIES_ROUTE}/${slug}`}
+        href={`/${params.domainSlug}/${CATEGORIES_ROUTE}/${slug}`}
         className="flex py-3 text-wrap w-[unset] hover:underline text-sky-700"
       >
         <span>
           See all quizzes
         </span>
-        <div className="flex">
+        <div className="flex items-center">
           <ChevronRight />
-          <ChevronRight className="-ml-4 opacity-75" />
-          <ChevronRight className="-ml-4 opacity-50" />
+          <ChevronRight className="-ml-4 opacity-75 w-5 h-5" />
+          <ChevronRight className="-ml-3 opacity-50 w-4 h-4" />
         </div>
       </NextLink>
     </li>

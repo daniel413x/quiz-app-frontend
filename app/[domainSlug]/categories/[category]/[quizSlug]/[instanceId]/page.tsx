@@ -20,7 +20,6 @@ const InstancePage = async ({
     method: 'GET',
   });
   const quizQuestion = await quizQuestionRes.json();
-  console.log(quizQuestion);
   return (
     <InstancePageContent quiz={quiz} quizQuestion={quizQuestion} />
   );

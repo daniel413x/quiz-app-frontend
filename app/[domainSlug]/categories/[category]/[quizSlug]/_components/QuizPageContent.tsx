@@ -35,8 +35,8 @@ const QuizPageContent = () => {
   return (
     <main className="flex flex-col items-center justify-between">
       <Button
-        variant="destructive"
-        className={cn('bg-transparent flex gap-1 px-8 py-6 border-2 border-red-500 shadow-sm text-red-400', {
+        variant="blank"
+        className={cn('bg-transparent flex gap-1 px-8 py-4 border-2 border-red-500 shadow-sm text-red-400', {
           'opacity-50 pointer-events-none': clicked,
         })}
         onClick={onBeginQuiz}

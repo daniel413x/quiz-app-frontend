@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/common/shadcn/button';
 import { Quiz } from '@/lib/data/types';
+import Breadcrumbs from '../[quizSlug]/_components/Breadcrumbs';
 
 interface CategoryPageProps {
   quiz: Quiz;
@@ -12,14 +13,13 @@ interface CategoryPageProps {
   params: { category: string; domainSlug: string; }
 }
 
-const gradientBg = 'bg-gradient-to-r from-orange-300/30 to-pink-500/30 dark:from-white/40 dark:to-pink-800/40';
-
 const CategoryPageContent = ({
   quiz,
   quizzes,
   params,
 }: CategoryPageProps) => (
   <main>
+    <Breadcrumbs />
     <Header header={quiz.name} />
     <ul className="flex flex-col gap-2 justify-between h-full">
       {quizzes.map((q) => (
@@ -27,9 +27,11 @@ const CategoryPageContent = ({
           <Link
             href={`/${params.domainSlug}/${CATEGORIES_ROUTE}/${params.category}/${q.slug}`}
               // this should be a cva
-            className="h-full shadow-md flex flex-col gap-3 p-6 rounded-sm bg-gray-100 dark:bg-background  "
+            className="h-full shadow-md flex flex-col gap-3 p-6 rounded-sm bg-gray-100 dark:bg-background"
           >
-            {q.name}
+            <span className="text-violet-700 dark:text-violet-400">
+              {q.name}
+            </span>
           </Link>
         </li>
       ))}
