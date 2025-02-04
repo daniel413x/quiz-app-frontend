@@ -24,6 +24,7 @@ import {
   DOMAIN_ROUTE, QUIZ_ROUTE, RESULTS_ROUTE, USER_ANSWER_ROUTE,
 } from '@/lib/data/routes';
 import axios from 'axios';
+import LoaderSpinnerIcon from '@/components/ui/common/LoaderSpinnerIcon';
 import useUserQuizData from '../_hooks/useUserQuizData';
 import { useTimer } from '../_hooks/useTimer';
 import QuizFormFields from './QuizFormFields';
@@ -50,10 +51,10 @@ const QuizForm = ({
   const {
     answersRecord, setFinalTime,
   } = useUserQuizData();
-  const [isSubmitted, setIsSubmitted] = useState<boolean | null>(null);
+  const [userAnswered, setUserAnswered] = useState<boolean | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const isAnsweredCorrectly = isSubmitted && isCorrect;
-  const isAnsweredIncorrectly = isSubmitted && !isCorrect;
+  const isAnsweredCorrectly = userAnswered && isCorrect;
+  const isAnsweredIncorrectly = userAnswered && !isCorrect;
   const router = useRouter();
   const domainSlug = useParams().domainSlug as string;
   const section = useParams().section as string;
@@ -65,6 +66,7 @@ const QuizForm = ({
   const form = useForm<QuizFormValues>({
     resolver: zodResolver(formSchema),
   });
+  const isSubmitting = form.formState.isSubmitting;
   const answerId = form.watch('answerId');
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const res = await axios.post(
@@ -79,7 +81,7 @@ const QuizForm = ({
       },
     );
     setIsCorrect(res.data.is_correct);
-    setIsSubmitted(true);
+    setUserAnswered(true);
     // setSubmittedAnswer(values.answer);
     // const newAnswersRecord = [...answersRecord];
     // if (newAnswersRecord[qNum]) {
@@ -101,7 +103,7 @@ const QuizForm = ({
   const handleChangeAnswer = (val: string) => {
     form.setValue('answerId', val);
     setIsCorrect(null);
-    setIsSubmitted(null);
+    setUserAnswered(null);
   };
   const handlePressNextButton = () => {
     if (!isAnsweredCorrectly) {
@@ -117,7 +119,7 @@ const QuizForm = ({
     form.reset({ answerId: undefined });
     router.refresh();
     setIsCorrect(null);
-    setIsSubmitted(null);
+    setUserAnswered(null);
   };
   const fieldRefs = useRef<{
     radioGroupRef: RefObject<HTMLDivElement>;
@@ -227,7 +229,8 @@ const QuizForm = ({
             formAnswer={answerId}
             handleChangeAnswer={handleChangeAnswer}
           />
-          <div className="grid gap-2">
+          <div className="relative grid gap-2">
+            {!isSubmitting ? null : <LoaderSpinnerIcon className="left-full top-full" />}
             <Button
               className={cn({
                 'pointer-events-none opacity-25': (isAnsweredIncorrectly || !answerId) && !form.watch().answerId,
