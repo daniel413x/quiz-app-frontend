@@ -17,8 +17,8 @@ const PressStartButton = () => {
     handleStartTimer,
   } = useTimer();
   const handlePressStart = () => {
-    router.push(`/${domainSlug}/${CATEGORIES_ROUTE}/${category}/${quizSlug}/${instanceId}?qNum=0`);
     handleStartTimer();
+    router.push(`/${domainSlug}/${CATEGORIES_ROUTE}/${category}/${quizSlug}/${instanceId}/0`);
   };
   return (
     <Button className="m-auto p-6 w-1/2 mt-4" variant="outline" onClick={handlePressStart}>

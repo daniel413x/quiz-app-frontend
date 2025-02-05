@@ -8,9 +8,12 @@ import { cn } from '@/lib/utils';
 import {
   ChevronLeft, RefreshCcw,
 } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { buttonVariants } from '@/components/ui/common/shadcn/button';
+import { QuizInstance } from '@/lib/data/types';
+import { CATEGORIES_ROUTE } from '@/lib/data/routes';
+import Header from '@/components/ui/common/Header';
 import Timer from '../../_components/Timer';
 import useUserQuizData from '../../_hooks/useUserQuizData';
 import { useTimer } from '../../_hooks/useTimer';
@@ -18,17 +21,25 @@ import { timerStartMs } from '../../_consts';
 import ResultCards from './ResultCards';
 import FilterOptions, { DEFAULT, INCORRECT_ONLY } from './FilterOptions';
 
-const ResultsPageContent = () => {
-  const category = useParams().category;
-  const section = useParams().section;
-  const router = useRouter();
+interface ResultsPageContentProps {
+  quizInstance: QuizInstance;
+}
+
+const ResultsPageContent = ({
+  quizInstance,
+}: ResultsPageContentProps) => {
+  const questions = quizInstance.questions;
+  const {
+    domainSlug,
+    category,
+    quizSlug,
+  } = useParams();
   const {
     handleStopTimer,
   } = useTimer();
   const {
     answersRecord,
     finalTime,
-    questions,
     reset,
   } = useUserQuizData();
   const ref = useRef(null);
@@ -52,24 +63,22 @@ const ResultsPageContent = () => {
   const [filter, setFilter] = useState<string>(DEFAULT);
   const filteredQuestions = questions.map((q, i) => {
     if (filter === INCORRECT_ONLY) {
-      if (answersRecord[i].length > 1) {
-        return q;
-      }
+      q.answers.forEach((quizInstanceAnsw) => {
+        // loop to check if at least one wrong answer exists
+        const hasWrongAnswer = quizInstanceAnsw.userAnswer && !quizInstanceAnsw.quizAnswer.correctAnswer;
+        if (hasWrongAnswer) {
+          return q;
+        }
+      });
       // result is filtered/not rendered
       return 0;
     }
     return q;
   });
-  if (answersRecord.length === 0) {
-    router.back();
-    return;
-  }
   return (
     <main className="flex flex-col items-center justify-between">
       <div className="flex flex-col gap-6">
-        <h1 className="text-3xl">
-          Your quiz results:
-        </h1>
+        <Header className="text-3xl mb-0" header="Your quiz results:" />
         <Card>
           <CardContent className="flex flex-col gap-6 pt-6 shadow-md">
             {' '}
@@ -123,7 +132,7 @@ const ResultsPageContent = () => {
           </CardContent>
         </Card>
         <div className="flex flex-col">
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-3 mb-7">
             <h2 className="text-2xl">
               Answers:
             </h2>
@@ -139,7 +148,7 @@ const ResultsPageContent = () => {
         </div>
       </div>
       <Link
-        href={`/${category}/${section}/quiz`}
+        href={`/${domainSlug}/${CATEGORIES_ROUTE}/${category}/${quizSlug}`}
         className={buttonVariants({ variant: 'outline', className: 'mt-8 h-[unset]' })}
       >
         <div className="flex items-center px-8 py-12">

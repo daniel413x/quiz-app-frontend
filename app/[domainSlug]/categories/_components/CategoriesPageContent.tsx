@@ -18,26 +18,28 @@ const CategoriesPageContent = async ({
   // use params to filter out domain, add quizzes etc
   const categories: CategoryGETManyRes = await res.json();
   return (
-    <div className="flex flex-col">
+    <>
       <Breadcrumbs />
-      <Header header="Quizzes by category" />
-      <ul className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {categories[0].map((c) => (
-          <li key={c.slug}>
-            <div className="h-full shadow-md flex flex-col gap-3 p-6 rounded-sm dark:bg-background">
-              <h3 className="text-lg text-purple-600">
-                {c.name}
-              </h3>
-              <CategoriesQuizLinks
-                params={params}
-                quizzes={c.quizzes}
-                slug={c.slug}
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+      <main className="flex flex-col">
+        <Header header="Quizzes by category" />
+        <ul className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {categories[0].map((c) => (
+            <li key={c.slug}>
+              <div className="h-full shadow-md flex flex-col gap-3 p-6 rounded-sm dark:bg-background">
+                <h3 className="text-lg text-purple-600">
+                  {c.name}
+                </h3>
+                <CategoriesQuizLinks
+                  params={params}
+                  quizzes={c.quizzes}
+                  slug={c.slug}
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </main>
+    </>
   );
 };
 

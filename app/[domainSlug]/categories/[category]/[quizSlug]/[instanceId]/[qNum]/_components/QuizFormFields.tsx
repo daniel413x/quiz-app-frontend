@@ -6,7 +6,7 @@ import { Answer } from '@/lib/data/types';
 import { cn } from '@/lib/utils';
 import { UseFormReturn } from 'react-hook-form';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
-import RenderedMarkdown from './RenderedMarkdown';
+import RenderedMarkdown from '../../_components/RenderedMarkdown';
 
 interface QuizFormFieldsProps {
   form: UseFormReturn<{

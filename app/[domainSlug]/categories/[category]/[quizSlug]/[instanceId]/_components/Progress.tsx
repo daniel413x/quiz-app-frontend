@@ -1,17 +1,21 @@
-'use client';
 
 import { cn } from '@/lib/utils';
-import useUserQuizData from '../_hooks/useUserQuizData';
 import { numOfQuestions } from '../_consts';
+import { QuizResults } from '@/lib/data/types';
 
-const Progress = () => {
-  const {
-    progress,
-  } = useUserQuizData();
+interface ProgressProps {
+  quizResults: QuizResults;
+}
+
+const Progress = ({
+  quizResults
+}: ProgressProps) => {
+  console.log(quizResults)
+  const progress = quizResults?.progress || 0;
   return (
     <div className="flex gap-1 relative bottom-0.5">
       <span className={cn({
-        'text-green-700': progress,
+        'text-green-700': progress > 0,
       })}
       >
         {`${progress}/${numOfQuestions}`}

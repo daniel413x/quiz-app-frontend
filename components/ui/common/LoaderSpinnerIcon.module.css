@@ -19,11 +19,27 @@
   width: 6px;
   height: 18px;
   border-radius: 20%;
-  background: rgb(0, 104, 5);
+  background: rgb(122, 122, 122);
+}
+
+.loaderSpinnerIcon.green div:after {
+  background: rgb(101, 190, 106);
+}
+
+.loaderSpinnerIcon.red div:after {
+  background: rgb(224, 46, 46);
 }
 
 .loaderSpinnerIcon.dark div:after {
-  background: rgb(108, 255, 115);
+  background: rgb(150, 150, 150);
+}
+
+.loaderSpinnerIcon.dark.green div:after {
+  background: rgb(103, 192, 68);
+}
+
+.loaderSpinnerIcon.dark.red div:after {
+  background: rgb(224, 46, 46);
 }
 
 .loaderSpinnerIcon div:nth-child(1) {

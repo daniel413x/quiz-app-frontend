@@ -7,8 +7,18 @@ export enum QuizMarkdownType {
 export type QuizMarkdownTuple = [QuizMarkdownType, string | TableData | StaticImageData] | [QuizMarkdownType];
 
 export type Answer = {
-  answer: QuizMarkdownTuple[];
+  answer: string;
   order?: number;
+  id: string;
+  correctAnswer: boolean;
+};
+
+export type UserAnswer = {
+  id: string;
+};
+
+export type QuizResults = {
+  progress: number;
   id: string;
 };
 
@@ -57,8 +67,22 @@ export type Quiz = {
   slug: string;
 };
 
+
+export type QuizInstanceAnswer = {
+  answer: string;
+  quizAnswer: Pick<Answer, "correctAnswer">;
+  userAnswer: UserAnswer | null;
+};
+
+export type QuizInstanceQuestion = {
+  question: string;
+  answers: QuizInstanceAnswer[];
+};
+
+
 export type QuizInstance = {
   id: string;
+  questions: QuizInstanceQuestion[];
 };
 
 export type Category = {

@@ -13,12 +13,14 @@ interface CategoryPageProps {
   params: { category: string; domainSlug: string; }
 }
 
+const navbarAndFooterHeight = 95.91 + 97 + 64;
+
 const CategoryPageContent = ({
   quiz,
   quizzes,
   params,
 }: CategoryPageProps) => (
-  <main>
+  <main className="h-full">
     <Breadcrumbs />
     <Header header={quiz.name} />
     <ul className="flex flex-col gap-2 justify-between h-full">

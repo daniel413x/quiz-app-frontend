@@ -11,25 +11,25 @@ import {
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { Question } from '@/lib/data/types';
+import { useParams, useRouter } from 'next/navigation';
+import { Question, QuizInstanceQuestion } from '@/lib/data/types';
 import { Button } from '@/components/ui/common/shadcn/button';
 import { cn } from '@/lib/utils';
 import {
   ArrowLeft, ArrowRight, CheckCircle, XCircle,
 } from 'lucide-react';
-import qs from 'query-string';
 import { useEventListener } from 'usehooks-ts';
 import {
-  DOMAIN_ROUTE, QUIZ_ROUTE, RESULTS_ROUTE, USER_ANSWER_ROUTE,
+  CATEGORIES_ROUTE,
+  RESULTS_ROUTE,
 } from '@/lib/data/routes';
-import axios from 'axios';
 import LoaderSpinnerIcon from '@/components/ui/common/LoaderSpinnerIcon';
-import useUserQuizData from '../_hooks/useUserQuizData';
-import { useTimer } from '../_hooks/useTimer';
+import createUserAnswer from '@/actions/user-answer/create';
+import useUserQuizData from '../../_hooks/useUserQuizData';
+import { useTimer } from '../../_hooks/useTimer';
 import QuizFormFields from './QuizFormFields';
-import IssueModal from './IssueModal';
-import useActiveElement from '../_hooks/useActiveElement';
+import IssueModal from '../../_components/IssueModal';
+import useActiveElement from '../../_hooks/useActiveElement';
 
 const formSchema = z.object({
   answerId: z.string(),
@@ -38,7 +38,7 @@ const formSchema = z.object({
 type QuizFormValues = z.infer<typeof formSchema>;
 
 type InstancePageContentProps = {
-  quizQuestion: Question;
+  quizQuestion: QuizInstanceQuestion;
 };
 
 const QuizForm = ({
@@ -57,49 +57,25 @@ const QuizForm = ({
   const isAnsweredIncorrectly = userAnswered && !isCorrect;
   const router = useRouter();
   const domainSlug = useParams().domainSlug as string;
-  const section = useParams().section as string;
+  const instanceId = useParams().instanceId as string;
+  const quizSlug = useParams().quizSlug as string;
   const category = useParams().category as string;
-  const searchParams = useSearchParams();
-  const qNum = Number(searchParams.get('qNum')) || 0;
+  const qNum = Number(useParams().qNum as string) || 0;
   const question = quizQuestion;
   const { answers } = question;
   const form = useForm<QuizFormValues>({
     resolver: zodResolver(formSchema),
   });
-  const isSubmitting = form.formState.isSubmitting;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const answerId = form.watch('answerId');
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/${DOMAIN_ROUTE}/${domainSlug}/${USER_ANSWER_ROUTE}`,
-      {
-        answerId: values.answerId,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
+    setIsLoading(true);
+    const res = await createUserAnswer(values);
+    setIsLoading(false);
     setIsCorrect(res.data.is_correct);
     setUserAnswered(true);
-    // setSubmittedAnswer(values.answer);
-    // const newAnswersRecord = [...answersRecord];
-    // if (newAnswersRecord[qNum]) {
-    //   newAnswersRecord[qNum] = [...newAnswersRecord[qNum], values.answer];
-    // } else {
-    //   newAnswersRecord.push([values.answer]);
-    // }
-    // setAnswersRecord(newAnswersRecord);
-    // if (question.correctAnswer === values.answer) {
-    //   setProgress(progress + 1);
-    // }
   };
-  const getNextUrl = (p: number) => qs.stringifyUrl({
-    url: window.location.href,
-    query: {
-      qNum: p,
-    },
-  });
+  const getNextUrl = (p: number) => `/${domainSlug}/${CATEGORIES_ROUTE}/${category}/${quizSlug}/${instanceId}/${p}`;
   const handleChangeAnswer = (val: string) => {
     form.setValue('answerId', val);
     setIsCorrect(null);
@@ -111,8 +87,7 @@ const QuizForm = ({
     }
     if (qNum === 25) {
       setFinalTime(timer);
-      // setQuestions(questions);
-      router.push(`/${category}/${section}/${QUIZ_ROUTE}/${RESULTS_ROUTE}`);
+      router.push(`/${domainSlug}/${CATEGORIES_ROUTE}/${category}/${quizSlug}/${instanceId}/${RESULTS_ROUTE}`);
       return;
     }
     router.push(getNextUrl(qNum + 1));
@@ -172,11 +147,7 @@ const QuizForm = ({
     }
   });
   useEffect(() => {
-    if (answersRecord[qNum]?.find((a) => a === question.correctAnswer)) {
-      form.reset({ answerId: question.correctAnswer });
-    } else {
-      form.reset({ answerId: undefined });
-    }
+    form.reset({ answerId: undefined });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qNum]);
   const isFirstRender = useRef(true);
@@ -186,6 +157,16 @@ const QuizForm = ({
     }
     isFirstRender.current = false;
   }, []);
+  useEffect(() => {
+    // snake case can be corrected by defining the data_key in the QuizInstanceQuestion serializer
+    if (quizQuestion.correct_user_answer) {
+      console.log(quizQuestion.correct_user_answer.quiz_instance_answer_id);
+      form.setValue('answerId', quizQuestion.correct_user_answer.quiz_instance_answer_id);
+      setIsCorrect(true);
+      setUserAnswered(true);
+    }
+  }, [quizQuestion]);
+  const userMustPickAnswer = (isAnsweredIncorrectly || !answerId) && !form.watch().answerId;
   return (
     <div className="flex flex-col mt-4">
       <div className="flex justify-between">
@@ -230,10 +211,15 @@ const QuizForm = ({
             handleChangeAnswer={handleChangeAnswer}
           />
           <div className="relative grid gap-2">
-            {!isSubmitting ? null : <LoaderSpinnerIcon className="left-full top-full" />}
+            <LoaderSpinnerIcon
+              className="left-full top-full"
+              bool={isLoading}
+              green={isAnsweredCorrectly}
+              red={isAnsweredIncorrectly}
+            />
             <Button
               className={cn({
-                'pointer-events-none opacity-25': (isAnsweredIncorrectly || !answerId) && !form.watch().answerId,
+                'pointer-events-none opacity-50': userMustPickAnswer || isLoading,
               })}
               onClick={handlePressNextButton}
               type={!isAnsweredCorrectly ? 'submit' : 'button'}
@@ -247,7 +233,7 @@ const QuizForm = ({
             </Button>
             <Button
               className={cn({
-                'pointer-events-none opacity-25': qNum === 0,
+                'pointer-events-none opacity-50': qNum === 0 || isLoading,
               })}
               onClick={() => router.push(getNextUrl(qNum - 1))}
               type="button"
