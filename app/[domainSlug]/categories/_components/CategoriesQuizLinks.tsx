@@ -19,7 +19,7 @@ const CategoriesQuizLinks = async ({
       <li key={q.slug}>
         <NextLink
           href={`/${params?.domainSlug}/${CATEGORIES_ROUTE}/${slug}/${q.slug}`}
-          className="py-3 text-wrap w-[unset] hover:underline"
+          className="flex py-3 text-wrap w-[unset] underline hover:text-purple-500"
         >
           {q.name}
         </NextLink>

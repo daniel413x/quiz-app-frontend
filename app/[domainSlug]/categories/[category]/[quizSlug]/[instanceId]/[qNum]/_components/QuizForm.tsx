@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams, useRouter } from 'next/navigation';
-import { Question, QuizInstanceQuestion } from '@/lib/data/types';
+import { QuizInstanceQuestion } from '@/lib/data/types';
 import { Button } from '@/components/ui/common/shadcn/button';
 import { cn } from '@/lib/utils';
 import {
@@ -160,7 +160,6 @@ const QuizForm = ({
   useEffect(() => {
     // snake case can be corrected by defining the data_key in the QuizInstanceQuestion serializer
     if (quizQuestion.correct_user_answer) {
-      console.log(quizQuestion.correct_user_answer.quiz_instance_answer_id);
       form.setValue('answerId', quizQuestion.correct_user_answer.quiz_instance_answer_id);
       setIsCorrect(true);
       setUserAnswered(true);

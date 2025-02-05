@@ -16,7 +16,6 @@ const QuizNumberPageContent = ({
   quizQuestion,
   quizResults,
 }: QuizNumberPageContentProps) => {
-  console.log(quizResults);
   const {
     resetTimer,
   } = useTimer();

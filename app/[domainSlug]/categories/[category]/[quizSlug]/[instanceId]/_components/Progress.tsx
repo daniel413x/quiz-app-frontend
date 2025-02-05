@@ -1,16 +1,14 @@
-
 import { cn } from '@/lib/utils';
-import { numOfQuestions } from '../_consts';
 import { QuizResults } from '@/lib/data/types';
+import { numOfQuestions } from '../_consts';
 
 interface ProgressProps {
   quizResults: QuizResults;
 }
 
 const Progress = ({
-  quizResults
+  quizResults,
 }: ProgressProps) => {
-  console.log(quizResults)
   const progress = quizResults?.progress || 0;
   return (
     <div className="flex gap-1 relative bottom-0.5">

@@ -32,7 +32,6 @@ const QuizNumberPage = async ({
     method: 'GET',
   });
   const quizQuestion = await quizQuestionRes.json();
-  console.log(quizQuestion);
   return (
     <QuizNumberPageContent quizQuestion={quizQuestion} quizResults={quizResults} />
   );

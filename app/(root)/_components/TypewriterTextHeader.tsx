@@ -13,7 +13,7 @@ const TypewriterTextHeader = () => (
     <TypewriterComponent
       options={{
         strings: [
-          'Quiz yourself.',
+          'Qu<span style="color: indigo;">iz</span> <span style="color: purple;">you</span><span style="color: indigo;">rself</span>.',
         ],
         autoStart: true,
         loop: false,
